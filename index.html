@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lista del Súper · Familia</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream:   #FDF6EC;
+    --peach:   #FDDBB4;
+    --orange:  #F4845F;
+    --red:     #E05C3A;
+    --green:   #4CAF7D;
+    --green-d: #357A57;
+    --teal:    #3BBFAD;
+    --yellow:  #FFCB47;
+    --yellow-d:#D4A017;
+    --purple:  #9B72CF;
+    --blue:    #5B9BD5;
+    --ink:     #2D2016;
+    --brown:   #7A5230;
+    --muted:   #A68B6A;
+    --line:    #EAD9C6;
+    --card-bg: #FFFAF4;
+    --shadow:  0 4px 20px rgba(120,80,30,0.10);
+    --radius:  18px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ── HEADER ─────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, #F4845F 0%, #E05C3A 50%, #C94E2D 100%);
+    padding: 28px 20px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .hero-emoji { font-size: 52px; display: block; margin-bottom: 6px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+  .hero h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 32px; font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .hero p { color: rgba(255,255,255,0.85); font-size: 14px; margin-top: 4px; font-weight: 500; }
+  .hero-deco {
+    position: absolute; right: -10px; top: -10px;
+    font-size: 100px; opacity: 0.12; transform: rotate(20deg);
+    pointer-events: none; user-select: none;
+  }
+
+  /* ── BUDGET CARD ─────────────────────────── */
+  .budget-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin: -30px 16px 0;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+    border: 2px solid var(--line);
+  }
+  .budget-label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .budget-input-row {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+  }
+  .peso { font-family:'Fredoka',sans-serif; font-size:24px; font-weight:700; color:var(--orange); }
+  .budget-input-row input {
+    font-family: 'Fredoka', sans-serif; font-size: 28px; font-weight: 700;
+    color: var(--ink); border: none; background: none;
+    width: 100%; outline: none;
+  }
+  .budget-input-row input::placeholder { color: var(--line); }
+
+  .progress-wrap { position: relative; }
+  .progress-track {
+    height: 14px; background: var(--peach);
+    border-radius: 99px; overflow: hidden;
+    border: 1.5px solid var(--line);
+  }
+  .progress-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    transition: width 0.5s cubic-bezier(.4,0,.2,1), background 0.4s;
+  }
+  .progress-fill.warn { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+  .progress-fill.over { background: linear-gradient(90deg, var(--orange), var(--red)); }
+  .progress-labels {
+    display: flex; justify-content: space-between;
+    margin-top: 8px;
+  }
+  .prog-spent { font-size: 13px; font-weight: 700; color: var(--green); }
+  .prog-spent.warn { color: var(--yellow-d); }
+  .prog-spent.over { color: var(--red); }
+  .prog-left { font-size: 13px; font-weight: 600; color: var(--muted); }
+  .prog-left.over { color: var(--red); font-weight: 700; }
+
+  .budget-stats {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; margin-top: 14px;
+  }
+  .stat {
+    background: var(--cream); border-radius: 12px;
+    padding: 10px 8px; text-align: center;
+    border: 1.5px solid var(--line);
+  }
+  .stat-val { font-family:'Fredoka',sans-serif; font-size:18px; font-weight:700; color:var(--ink); }
+  .stat-lbl { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.4px; }
+
+  /* ── SECTIONS ────────────────────────────── */
+  .sections { padding: 20px 16px 0; display: flex; flex-direction: column; gap: 16px; }
+
+  .section-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 2px solid var(--line);
+    overflow: hidden;
+  }
+  .section-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-emoji { font-size: 24px; flex-shrink: 0; }
+  .section-name {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 17px; font-weight: 600; flex: 1;
+    color: var(--ink);
+  }
+  .section-sub { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .section-total {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--brown);
+    background: var(--peach);
+    padding: 4px 10px; border-radius: 99px;
+    border: 1.5px solid var(--line);
+    white-space: nowrap;
+  }
+  .chevron { font-size: 14px; color: var(--muted); transition: transform 0.3s; flex-shrink:0; }
+  .section-card.open .chevron { transform: rotate(180deg); }
+
+  .section-body { display: none; border-top: 1.5px solid var(--line); }
+  .section-card.open .section-body { display: block; }
+
+  .col-headers {
+    display: grid;
+    grid-template-columns: 28px 1fr 72px 72px 32px;
+    gap: 6px; padding: 8px 14px;
+    background: var(--peach);
+    font-size: 10px; font-weight: 800;
+    color: var(--brown); text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .col-headers span:nth-child(3),
+  .col-headers span:nth-child(4) { text-align: right; }
+
+  .item-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 72px 72px 32px;
+    gap: 6px; padding: 9px 14px;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s;
+  }
+  .item-row:last-of-type { border-bottom: none; }
+  .item-row:hover { background: #FFF5EA; }
+
+  .item-check {
+    width: 22px; height: 22px;
+    border: 2.5px solid var(--line);
+    border-radius: 8px; background: #fff;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; transition: all 0.2s; flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .item-check.checked {
+    background: var(--green); border-color: var(--green-d);
+    color: #fff;
+  }
+
+  .item-name-input {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    border: none; background: none; outline: none; width: 100%;
+    transition: opacity 0.2s;
+  }
+  .item-name-input.done { text-decoration: line-through; opacity: 0.4; }
+
+  .price-input {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    border: none; background: none; outline: none;
+    width: 100%; text-align: right;
+    -moz-appearance: textfield;
+  }
+  .price-input::-webkit-inner-spin-button,
+  .price-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .price-input:focus {
+    background: var(--peach); border-radius: 8px;
+    padding: 2px 6px; margin: -2px -6px;
+  }
+  .price-input.real-filled { color: var(--green-d); }
+
+  .del-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--line); font-size: 16px;
+    opacity: 0; transition: opacity 0.2s, color 0.2s;
+    padding: 4px; border-radius: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .item-row:hover .del-btn { opacity: 1; }
+  .del-btn:hover { color: var(--red); }
+
+  /* ADD ROW */
+  .add-row {
+    display: flex; gap: 8px; align-items: center;
+    padding: 10px 14px;
+    background: var(--cream);
+    border-top: 1.5px dashed var(--line);
+  }
+  .add-name {
+    flex: 1; font-family:'Nunito',sans-serif; font-size:14px;
+    border: none; background: none; outline: none; color: var(--ink);
+  }
+  .add-name::placeholder { color: var(--muted); }
+  .add-price { width: 70px; font-family:'Fredoka',sans-serif; font-size:14px; text-align:right; border:none; background:none; outline:none; color:var(--ink); -moz-appearance:textfield; }
+  .add-price::-webkit-inner-spin-button, .add-price::-webkit-outer-spin-button { -webkit-appearance:none; }
+  .add-price::placeholder { color: var(--muted); }
+  .add-confirm {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--green); border: none; cursor: pointer;
+    color: #fff; font-size: 18px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .add-confirm:active { transform: scale(0.9); }
+
+  /* ADD SECTION BTN */
+  .add-section-btn {
+    background: none; border: 2px dashed var(--line);
+    border-radius: var(--radius); width: 100%;
+    padding: 14px; cursor: pointer;
+    font-family: 'Fredoka', sans-serif; font-size: 16px;
+    color: var(--muted); display: flex; align-items: center;
+    justify-content: center; gap: 8px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .add-section-btn:hover { background: var(--peach); color: var(--brown); }
+
+  /* ── RECEIPT ─────────────────────────────── */
+  .receipt-wrap { padding: 20px 16px 0; }
+  .receipt-card {
+    background: var(--card-bg); border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 2px solid var(--line);
+    overflow: hidden;
+  }
+  .receipt-head {
+    background: var(--ink); padding: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .receipt-head span { font-family:'Fredoka',sans-serif; font-size:18px; font-weight:700; color:#fff; }
+  .receipt-body { padding: 16px; }
+  .receipt-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px dashed var(--line); }
+  .receipt-row:last-child { border-bottom:none; }
+  .receipt-cat { font-size:13px; font-weight:700; color:var(--brown); }
+  .receipt-amt { font-family:'Fredoka',sans-serif; font-size:14px; font-weight:700; color:var(--ink); }
+  .receipt-total-row { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:var(--ink); }
+  .receipt-total-lbl { font-family:'Fredoka',sans-serif; font-size:16px; color:#fff; font-weight:700; }
+  .receipt-total-val { font-family:'Fredoka',sans-serif; font-size:22px; color:var(--yellow); font-weight:700; }
+
+  /* ── DOWNLOAD BTN ────────────────────────── */
+  .dl-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin: 20px 16px 0;
+    background: var(--ink); color: #fff;
+    font-family:'Fredoka',sans-serif; font-size:16px; font-weight:600;
+    padding: 14px; border-radius: var(--radius);
+    border: none; cursor: pointer;
+    transition: transform 0.15s, background 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .dl-btn:hover { background: var(--brown); }
+  .dl-btn:active { transform: scale(0.98); }
+
+  /* mobile tap targets */
+  @media (max-width: 480px) {
+    .item-row { grid-template-columns: 26px 1fr 64px 64px 28px; gap:4px; padding:8px 10px; }
+    .col-headers { grid-template-columns: 26px 1fr 64px 64px 28px; gap:4px; padding:8px 10px; }
+    .del-btn { opacity: 0.4; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hero">
+  <span class="hero-emoji">🛒</span>
+  <h1>Lista del Súper</h1>
+  <p>Familia · 4 personas · Semana __________________</p>
+  <div class="hero-deco">🥦</div>
+</div>
+
+<!-- BUDGET -->
+<div class="budget-card">
+  <div class="budget-label">💰 Presupuesto de la semana</div>
+  <div class="budget-input-row">
+    <span class="peso">$</span>
+    <input type="number" id="budget" placeholder="2000" min="0" step="100" value="2000" />
+    <span style="font-size:13px;color:var(--muted);font-weight:700;">MXN</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+    <div class="progress-labels">
+      <span class="prog-spent" id="prog-spent">$0 gastado</span>
+      <span class="prog-left" id="prog-left"></span>
+    </div>
+  </div>
+  <div class="budget-stats">
+    <div class="stat"><div class="stat-val" id="stat-est">$0</div><div class="stat-lbl">Estimado</div></div>
+    <div class="stat"><div class="stat-val" id="stat-real">$0</div><div class="stat-lbl">Real</div></div>
+    <div class="stat"><div class="stat-val" id="stat-items">0</div><div class="stat-lbl">Artículos</div></div>
+  </div>
+</div>
+
+<!-- SECTIONS -->
+<div class="sections" id="sections"></div>
+
+<!-- ADD SECTION -->
+<div style="padding:12px 16px 0;">
+  <button class="add-section-btn" onclick="promptNewSection()">＋ Agregar categoría</button>
+</div>
+
+<!-- RECEIPT -->
+<div class="receipt-wrap">
+  <div class="receipt-card">
+    <div class="receipt-head">
+      <span>🧾</span>
+      <span>Resumen de gastos</span>
+    </div>
+    <div class="receipt-body" id="receipt-body"></div>
+    <div class="receipt-total-row">
+      <span class="receipt-total-lbl">Total real</span>
+      <span class="receipt-total-val" id="receipt-total">$0</span>
+    </div>
+  </div>
+</div>
+
+<!-- DOWNLOAD -->
+<button class="dl-btn" onclick="downloadTxt()">⬇️ Descargar lista completa</button>
+
+<script>
+const EMOJIS = ['🧹','🧴','🛒','🥦','🥩','🥛','🧃','🍎','🥚','🧀','🍗','🌮','🍋','🧺','🫙'];
+const EMOJI_MAP = {
+  'limpieza':'🧹','higiene':'🧴','despensa':'🛒',
+  'frutas':'🥦','verduras':'🥦','carnes':'🥩',
+  'lacteos':'🥛','lácteos':'🥛','bebidas':'🧃',
+};
+function catEmoji(name) {
+  const k = name.toLowerCase();
+  for (const [kw, em] of Object.entries(EMOJI_MAP)) { if (k.includes(kw)) return em; }
+  return EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+}
+
+const INIT = [
+  { id:'limpieza', name:'Limpieza del hogar', items:[
+    {name:'Jabón para trastes',est:45,real:''},{name:'Detergente ropa',est:120,real:''},{name:'Suavizante de ropa',est:70,real:''},
+    {name:'Cloro',est:35,real:''},{name:'Limpiador multiusos',est:55,real:''},{name:'Aromatizante ambiente',est:45,real:''},
+    {name:'Papel de baño (paquete)',est:90,real:''},{name:'Bolsas de basura',est:40,real:''},{name:'Esponja / fibra',est:25,real:''},
+  ]},
+  { id:'higiene', name:'Higiene personal', items:[
+    {name:'Pasta dental (x2)',est:80,real:''},{name:'Shampoo (x2)',est:140,real:''},{name:'Acondicionador',est:80,real:''},
+    {name:'Jabón de baño (x4)',est:80,real:''},{name:'Desodorante hombres (x2)',est:90,real:''},
+    {name:'Desodorante mujeres (x2)',est:90,real:''},{name:'Toallas sanitarias',est:80,real:''},
+    {name:'Algodón y alcohol',est:45,real:''},{name:'Paracetamol / antigripal',est:60,real:''},
+    {name:'Crema facial / humectante',est:90,real:''},{name:'Limpiador facial',est:80,real:''},
+  ]},
+  { id:'despensa', name:'Despensa', items:[
+    {name:'Arroz (1 kg)',est:35,real:''},{name:'Frijoles (1 kg)',est:45,real:''},{name:'Aceite (900 ml)',est:55,real:''},
+    {name:'Sal',est:15,real:''},{name:'Azúcar (1 kg)',est:30,real:''},{name:'Consomé / sazonador',est:35,real:''},
+    {name:'Tortillas / masa',est:40,real:''},{name:'Huevo (docena)',est:60,real:''},{name:'Atún en lata (x3)',est:75,real:''},
+    {name:'Pasta / sopa',est:30,real:''},{name:'Avena',est:35,real:''},{name:'Mermelada o crema de cacahuate',est:55,real:''},
+    {name:'Pan de caja',est:45,real:''},{name:'Salsa / jitomate enlatado',est:35,real:''},
+  ]},
+  { id:'frutas', name:'Frutas y verduras', items:[
+    {name:'Jitomate (1 kg)',est:35,real:''},{name:'Cebolla (1 kg)',est:25,real:''},{name:'Ajo',est:20,real:''},
+    {name:'Papa (1 kg)',est:30,real:''},{name:'Zanahoria (1 kg)',est:25,real:''},{name:'Chiles (250 g)',est:20,real:''},
+    {name:'Limones (1 kg)',est:30,real:''},{name:'Plátano (1 kg)',est:25,real:''},{name:'Manzana (1 kg)',est:45,real:''},
+    {name:'Lechuga',est:20,real:''},{name:'Calabaza (1 kg)',est:25,real:''},
+  ]},
+  { id:'carnes', name:'Carnes y proteínas', items:[
+    {name:'Pollo (2 kg)',est:200,real:''},{name:'Carne molida (500 g)',est:110,real:''},
+    {name:'Milanesas de res (500 g)',est:130,real:''},{name:'Jamón (200 g)',est:55,real:''},{name:'Salchicha (pack)',est:45,real:''},
+  ]},
+  { id:'lacteos', name:'Lácteos y refrigerados', items:[
+    {name:'Leche (1 L x 4)',est:80,real:''},{name:'Queso panela (400 g)',est:75,real:''},
+    {name:'Crema (200 g)',est:35,real:''},{name:'Yogur (x4)',est:60,real:''},{name:'Mantequilla (90 g)',est:40,real:''},
+  ]},
+  { id:'bebidas', name:'Bebidas', items:[
+    {name:'Agua natural (garrafón)',est:45,real:''},{name:'Jugo de naranja (1 L)',est:35,real:''},
+    {name:'Refresco (2 L)',est:35,real:''},{name:'Café molido (250 g)',est:70,real:''},
+  ]},
+];
+
+// Load from localStorage or use defaults
+let state = (() => {
+  try { const s = localStorage.getItem('lista_familia_v2'); return s ? JSON.parse(s) : null; } catch(e){ return null; }
+})() || INIT.map(c => ({
+  ...c, open: true,
+  items: c.items.map((it,i)=>({...it,id:c.id+'_'+i,done:false}))
+}));
+
+function save() {
+  try { localStorage.setItem('lista_familia_v2', JSON.stringify(state)); } catch(e){}
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString('es-MX'); }
+
+function totalEst() { return state.flatMap(c=>c.items).reduce((s,it)=>s+(parseFloat(it.est)||0),0); }
+function totalReal() { return state.flatMap(c=>c.items).reduce((s,it)=>s+(it.real!==''?parseFloat(it.real)||0:0),0); }
+function totalItems() { return state.flatMap(c=>c.items).filter(it=>it.done).length; }
+
+function updateBudget() {
+  const budget = parseFloat(document.getElementById('budget').value)||0;
+  const real = totalReal();
+  const est = totalEst();
+  const pct = budget>0 ? Math.min(real/budget*100,100) : 0;
+  const fill = document.getElementById('prog-fill');
+  const sp = document.getElementById('prog-spent');
+  const lf = document.getElementById('prog-left');
+  fill.style.width = pct+'%';
+  fill.className = 'progress-fill' + (pct>90?' over':pct>65?' warn':'');
+  sp.textContent = fmt(real)+' gastado';
+  sp.className = 'prog-spent' + (pct>90?' over':pct>65?' warn':'');
+  if (budget>0) {
+    const diff = budget-real;
+    lf.textContent = diff>=0 ? 'Te quedan '+fmt(diff) : '⚠️ Te pasas '+fmt(Math.abs(diff));
+    lf.className = 'prog-left'+(diff<0?' over':'');
+  } else { lf.textContent=''; lf.className='prog-left'; }
+  document.getElementById('stat-est').textContent = fmt(est);
+  document.getElementById('stat-real').textContent = fmt(real);
+  document.getElementById('stat-items').textContent = totalItems()+'/'+state.flatMap(c=>c.items).length;
+  updateReceipt();
+}
+
+function updateReceipt() {
+  const body = document.getElementById('receipt-body');
+  body.innerHTML = '';
+  let total = 0;
+  state.forEach(cat => {
+    const amt = cat.items.reduce((s,it)=>s+(it.real!==''?parseFloat(it.real)||0:0),0);
+    if (amt===0) return;
+    total += amt;
+    const row = document.createElement('div');
+    row.className = 'receipt-row';
+    row.innerHTML = `<span class="receipt-cat">${catEmoji(cat.name)} ${cat.name}</span><span class="receipt-amt">${fmt(amt)}</span>`;
+    body.appendChild(row);
+  });
+  document.getElementById('receipt-total').textContent = fmt(total);
+}
+
+function renderAll() {
+  const cont = document.getElementById('sections');
+  cont.innerHTML = '';
+  state.forEach(cat => renderSection(cat, cont));
+  updateBudget();
+}
+
+function renderSection(cat, cont) {
+  const card = document.createElement('div');
+  card.className = 'section-card' + (cat.open?' open':'');
+  card.id = 'sec_'+cat.id;
+
+  const estTotal = cat.items.reduce((s,it)=>s+(parseFloat(it.est)||0),0);
+  const realTotal = cat.items.reduce((s,it)=>s+(it.real!==''?parseFloat(it.real)||0:0),0);
+  const showAmt = realTotal>0 ? fmt(realTotal) : fmt(estTotal);
+  const done = cat.items.filter(i=>i.done).length;
+
+  card.innerHTML = `
+    <div class="section-head" onclick="toggleSection('${cat.id}')">
+      <span class="section-emoji">${catEmoji(cat.name)}</span>
+      <div style="flex:1;min-width:0">
+        <div class="section-name">${cat.name}</div>
+        <div class="section-sub">${done}/${cat.items.length} listos</div>
+      </div>
+      <span class="section-total">${showAmt}</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="col-headers">
+        <span></span><span>Producto</span><span>Est.</span><span>Real</span><span></span>
+      </div>
+      <div id="items_${cat.id}"></div>
+      <div class="add-row">
+        <input class="add-name" id="add_name_${cat.id}" placeholder="+ Agregar producto..." />
+        <span style="font-size:12px;color:var(--muted)">$</span>
+        <input class="add-price" type="number" id="add_price_${cat.id}" placeholder="0" />
+        <button class="add-confirm" onclick="confirmAdd('${cat.id}')">+</button>
+      </div>
+    </div>
+  `;
+  cont.appendChild(card);
+  renderItems(cat);
+}
+
+function renderItems(cat) {
+  const wrap = document.getElementById('items_'+cat.id);
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  cat.items.forEach(it => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML = `
+      <div class="item-check${it.done?' checked':''}" onclick="toggleDone('${cat.id}','${it.id}')">${it.done?'✓':''}</div>
+      <input class="item-name-input${it.done?' done':''}" value="${it.name}" onchange="updateName('${cat.id}','${it.id}',this.value)" />
+      <input class="price-input" type="number" value="${it.est}" placeholder="—" onchange="updateEst('${cat.id}','${it.id}',this.value)" />
+      <input class="price-input${it.real!==''?' real-filled':''}" type="number" value="${it.real}" placeholder="—"
+        onchange="updateReal('${cat.id}','${it.id}',this.value)"
+        onfocus="this.select()"
+        style="color:${it.real!==''?'var(--green-d)':'var(--muted)'}" />
+      <button class="del-btn" onclick="delItem('${cat.id}','${it.id}')">✕</button>
+    `;
+    wrap.appendChild(row);
+  });
+}
+
+function refreshSection(cid) {
+  const cat = state.find(c=>c.id===cid);
+  const card = document.getElementById('sec_'+cid);
+  if (!card || !cat) return;
+  const estTotal = cat.items.reduce((s,it)=>s+(parseFloat(it.est)||0),0);
+  const realTotal = cat.items.reduce((s,it)=>s+(it.real!==''?parseFloat(it.real)||0:0),0);
+  const showAmt = realTotal>0?fmt(realTotal):fmt(estTotal);
+  const done = cat.items.filter(i=>i.done).length;
+  card.querySelector('.section-total').textContent = showAmt;
+  card.querySelector('.section-sub').textContent = done+'/'+cat.items.length+' listos';
+  renderItems(cat);
+  updateBudget();
+  save();
+}
+
+function toggleSection(cid) {
+  const cat = state.find(c=>c.id===cid);
+  cat.open = !cat.open;
+  const card = document.getElementById('sec_'+cid);
+  card.classList.toggle('open', cat.open);
+  save();
+}
+
+function toggleDone(cid, iid) {
+  const cat = state.find(c=>c.id===cid);
+  const it = cat.items.find(i=>i.id===iid);
+  it.done = !it.done;
+  refreshSection(cid);
+}
+function updateName(cid, iid, val) {
+  state.find(c=>c.id===cid).items.find(i=>i.id===iid).name = val;
+  save();
+}
+function updateEst(cid, iid, val) {
+  state.find(c=>c.id===cid).items.find(i=>i.id===iid).est = parseFloat(val)||0;
+  refreshSection(cid);
+}
+function updateReal(cid, iid, val) {
+  const it = state.find(c=>c.id===cid).items.find(i=>i.id===iid);
+  it.real = val===''?'':parseFloat(val)||0;
+  refreshSection(cid);
+}
+function delItem(cid, iid) {
+  const cat = state.find(c=>c.id===cid);
+  cat.items = cat.items.filter(i=>i.id!==iid);
+  refreshSection(cid);
+}
+function confirmAdd(cid) {
+  const name = document.getElementById('add_name_'+cid)?.value?.trim();
+  const price = parseFloat(document.getElementById('add_price_'+cid)?.value)||0;
+  if (!name) return;
+  const cat = state.find(c=>c.id===cid);
+  cat.items.push({name,est:price,real:'',id:cid+'_'+Date.now(),done:false});
+  document.getElementById('add_name_'+cid).value='';
+  document.getElementById('add_price_'+cid).value='';
+  refreshSection(cid);
+}
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter' && e.target.classList.contains('add-name')) {
+    const cid = e.target.id.replace('add_name_','');
+    confirmAdd(cid);
+    e.target.focus();
+  }
+});
+
+function promptNewSection() {
+  const name = prompt('¿Nombre de la nueva categoría?');
+  if (!name?.trim()) return;
+  const id = 'cat_'+Date.now();
+  state.push({id, name:name.trim(), open:true, items:[]});
+  renderAll();
+}
+
+function downloadTxt() {
+  const budget = parseFloat(document.getElementById('budget').value)||0;
+  let txt = '🛒 LISTA DEL SÚPER — FAMILIA\n';
+  txt += '=====================================\n';
+  txt += 'Presupuesto: '+fmt(budget)+'\n';
+  txt += 'Total estimado: '+fmt(totalEst())+'\n';
+  txt += 'Total real: '+fmt(totalReal())+'\n';
+  txt += '=====================================\n\n';
+  state.forEach(cat=>{
+    txt += catEmoji(cat.name)+' '+cat.name.toUpperCase()+'\n';
+    txt += '-------------------------------------\n';
+    cat.items.forEach(it=>{
+      const chk = it.done?'[✓]':'[ ]';
+      const real = it.real!==''?' → Real: '+fmt(it.real):'';
+      txt += chk+' '+it.name+' (Est: '+fmt(it.est)+real+')\n';
+    });
+    txt+='\n';
+  });
+  const blob = new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'lista_super.txt'; a.click();
+}
+
+document.getElementById('budget').addEventListener('input', updateBudget);
+renderAll();
+</script>
+</body>
+</html>
